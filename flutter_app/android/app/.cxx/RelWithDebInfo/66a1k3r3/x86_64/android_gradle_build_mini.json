@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/home/user/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/usr/bin/ninja",
+      "-C",
+      "/media/user/Storage/Documents/Coding_Minds/allen_DUI_prevention_app/android/app/.cxx/RelWithDebInfo/66a1k3r3/x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/usr/bin/ninja",
+    "-C",
+    "/media/user/Storage/Documents/Coding_Minds/allen_DUI_prevention_app/android/app/.cxx/RelWithDebInfo/66a1k3r3/x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

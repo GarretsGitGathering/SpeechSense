@@ -1,0 +1,29 @@
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+subprojects {
+    afterEvaluate { project ->
+        // Only affect Android modules
+        if (project.hasProperty('android')) {
+            project.android {
+                // If no namespace is set, inject one based on the project’s group or name
+                if (!namespace || namespace.trim().isEmpty()) {
+                    namespace project.group ?: "com.example.${project.name}"
+                }
+            }
+        }
+    }
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

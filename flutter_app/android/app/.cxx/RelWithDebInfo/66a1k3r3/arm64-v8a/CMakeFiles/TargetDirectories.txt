@@ -1,0 +1,2 @@
+/media/user/Storage/Documents/Coding_Minds/allen_DUI_prevention_app/android/app/.cxx/RelWithDebInfo/66a1k3r3/arm64-v8a/CMakeFiles/edit_cache.dir
+/media/user/Storage/Documents/Coding_Minds/allen_DUI_prevention_app/android/app/.cxx/RelWithDebInfo/66a1k3r3/arm64-v8a/CMakeFiles/rebuild_cache.dir

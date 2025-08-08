@@ -1,0 +1,8 @@
+firebase_admin
+Flask
+librosa
+moviepy
+numpy
+pandas
+Requests
+scikit_learn
