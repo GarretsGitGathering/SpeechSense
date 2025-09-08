@@ -1,6 +1,7 @@
 import os
 import time
 import requests
+import datetime
 from dotenv import load_dotenv
 
 import RPi.GPIO as GPIO
@@ -19,16 +20,43 @@ RELAY_PIN = 7
 GPIO.setmode(GPIO.BCM) # 0 for low and 1 for high (off or on)
 GPIO.setup(RELAY_PIN, GPIO.OUT) # sending data to relay
 
+user_id = "temp_id"
+
+def check_is_paired():
+    try:
+        device_doc = get_document("intoxication_devices", device_id)
+        if not device_doc:
+            print("Device does not exist in database. Contact support: contact@superlegitbusiness.com")
+            return False
+
+        user_id = device_doc.get("user_id", None)
+        if not user_id:
+            print("Device not paired to a user.")
+            return False
+
+        user_doc = get_document("intoxication_users", user_id)
+        if not user_doc:
+            print("Not paired to a valid user.")
+            return False
+        
+        return True
+    except Exception as error:
+        print(f"Unable to get user data: {error}")
+        return False
 
 # check database for most recent classification
 def check_last_instance():
     # pull most recent instance from the database
-    
+    doc = get_document("intoxication_users", temp_id)
+    if not doc:
+        print("User does not exist.")
+        return
     
     # ensure timestamp is from within at least 5 mins
-    
-    
-    # check the classification
-    
-    
-    # return classification
+    curr_timestamp = datetime.datetime().now()  # grab's current timestamp
+    for key, value in doc:
+        if (key + datetime.timedelta(minutes=5)) >= curr_timestamp:        # if one of the keys in the history is less than 5 minutes ago, then allow the car to start
+            if not doc[key]['is_intoxicated']:
+                GPIO.output(RELAY_PIN, GPIO.HIGH)   # close relay, allow car to start
+
+    GPIO.output(RELAY_PIN, GPIO.LOW)    # keep the relay open in any other case

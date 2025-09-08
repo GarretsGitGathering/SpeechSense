@@ -194,9 +194,9 @@ def pair_device():
         if not device_doc:
             return jsonify({"error": "Device does not exist."}), 400
         
-        # check to ensure the device doesn't currently have a key
-        key = request.json.get("key", None)
-        if key and key != "":
+        # check to ensure the device doesn't currently have a user associated
+        user_id = request.json.get("user_id", None)
+        if user_id and user_id != "":
             return jsonify({"error": "Device already paired."}), 400
         
         # generate a user key 
@@ -206,7 +206,10 @@ def pair_device():
         is_set = update_document("intoxication_users", user_id, "key", user_key)
         if not is_set:
             return jsonify({"error": "Unable to update user document."}), 400
-        
+       
+        update_document("intoxication_users", user_id, "device_id", device_id)
+        update_document("intoxication_devices", device_id, "user_id", user_id)
+
         return jsonify({"key": user_key})
     except Exception as error:
         return jsonify({"error": "Unable to pair to device."}), 500
