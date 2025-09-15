@@ -31,7 +31,7 @@ def check_is_paired():
 
         user_id = device_doc.get("user_id", None)
         if not user_id:
-            print("Device not paired to a user.")
+            print(f"Device not paired to a user. Please pair to device in app with device id: {device_id}")
             return False
 
         user_doc = get_document("intoxication_users", user_id)
@@ -57,6 +57,30 @@ def check_last_instance():
     for key, value in doc:
         if (key + datetime.timedelta(minutes=5)) >= curr_timestamp:        # if one of the keys in the history is less than 5 minutes ago, then allow the car to start
             if not doc[key]['is_intoxicated']:
-                GPIO.output(RELAY_PIN, GPIO.HIGH)   # close relay, allow car to start
+                return True
+    return False
 
-    GPIO.output(RELAY_PIN, GPIO.LOW)    # keep the relay open in any other case
+
+# event loop that allows car to start
+if __name__ == "__main__": 
+    ready_to_go = False
+    while not ready_to_go:
+        # ensure the device is paired 
+        is_paired = False
+        while not is_paired:
+            is_paired = check_is_paired()
+            time.sleep(5)
+
+        # check last instance was within 5 minutes ago:
+        ready_to_go = check_last_instance()
+
+        # close relay or keep open depending upon ready_to_go
+        if ready_to_go: 
+            print("You're ready to drive!")
+            GPIO.output(RELAY_PIN, GPIO.HIGH) 
+        else: 
+            print("You must upload audio that passes our test in order to drive!")
+            GPIO.output(RELAY_PIN, GPIO.LOW)
+
+            # delay by 10 seconds in between checks 
+            time.sleep(10)
