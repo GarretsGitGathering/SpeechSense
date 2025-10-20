@@ -47,15 +47,15 @@ def check_is_paired():
 # check database for most recent classification
 def check_last_instance():
     # pull most recent instance from the database
-    doc = get_document("intoxication_users", temp_id)
+    doc = get_document("intoxication_users", user_id)
     if not doc:
         print("User does not exist.")
         return
     
     # ensure timestamp is from within at least 5 mins
-    curr_timestamp = datetime.datetime().now()  # grab's current timestamp
-    for key, value in doc:
-        if (key + datetime.timedelta(minutes=5)) >= curr_timestamp:        # if one of the keys in the history is less than 5 minutes ago, then allow the car to start
+    curr_timestamp = datetime.datetime.now().timestamp()  # grab's current timestamp
+    for key in doc.keys():
+        if (float(key) + datetime.timedelta(minutes=5).total_seconds()) >= curr_timestamp:        # if one of the keys in the history is less than 5 minutes ago, then allow the car to start
             if not doc[key]['is_intoxicated']:
                 return True
     return False
